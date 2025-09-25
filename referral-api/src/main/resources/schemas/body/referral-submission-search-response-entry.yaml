@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: string
+  submittedUserId:
+    type: string
+  submittedReferralCode:
+    type: string
+  referredUserId:
+    type: string
+  submissionDateTime:
+    type: string
+  expiryDateTime:
+    type: string
+  referralCodeStatus:
+    type: string
+  submissionStatus:
+    type: string

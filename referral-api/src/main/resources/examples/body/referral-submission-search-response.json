@@ -1,0 +1,25 @@
+{
+  "totalResults": 2,
+  "submissions": [
+    {
+      "submissionId": "SUB123456",
+      "submitterUserId": "USR1001",
+      "referralCode": "REF20250913A",
+      "referredUserId": "USR2001",
+      "submissionDateTime": "2025-09-13T10:15:30Z",
+      "expiryDateTime": "2025-12-13T10:15:30Z",
+      "referralCodeStatus": "ACTIVE",
+      "submissionStatus": "ACTIVE"
+    },
+    {
+      "submissionId": "SUB123457",
+      "submitterUserId": "USR1002",
+      "referralCode": "REF20250913B",
+      "referredUserId": "USR2002",
+      "submissionDateTime": "2025-09-12T08:45:00Z",
+      "expiryDateTime": "2025-12-12T08:45:00Z",
+      "referralCodeStatus": "EXPIRED",
+      "submissionStatus": "EXPIRED"
+    }
+  ]
+}

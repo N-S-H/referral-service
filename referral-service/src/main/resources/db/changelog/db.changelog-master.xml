@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="20250916" author="backbase_developer">
+        <!-- user_referral table -->
+        <createTable tableName="user_referral">
+            <column name="id" type="varchar(36)">
+                <constraints primaryKey="true" primaryKeyName="referral_id_pk"/>
+            </column>
+            <column name="user_id" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="referral_code" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="referral_qr_string" type="varchar(3072)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_date_time" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date_time" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="referral_status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="idx_referral_referral_code" tableName="user_referral">
+            <column name="referral_code"/>
+        </createIndex>
+        <createIndex indexName="idx_referral_user_id" tableName="user_referral">
+            <column name="user_id"/>
+        </createIndex>
+        <createIndex indexName="idx_referral_created_date_time" tableName="user_referral">
+            <column name="created_date_time"/>
+        </createIndex>
+        <createIndex indexName="idx_referral_status" tableName="user_referral">
+            <column name="referral_status"/>
+        </createIndex>
+
+        <!-- user_referral_submission table -->
+        <createTable tableName="user_referral_submission">
+            <column name="id" type="varchar(36)">
+                <constraints primaryKey="true" primaryKeyName="submission_id_pk"/>
+            </column>
+            <column name="submitted_user_id" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="submitted_referral_code" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="referral_id" type="varchar(36)"/>
+            <column name="submission_source" type="varchar(255)"/>
+            <column name="submission_date_time" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date_time" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="submission_status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Indexes for submission table (fixed column names & unique index names) -->
+        <createIndex indexName="idx_submission_submitted_user_id" tableName="user_referral_submission">
+            <column name="submitted_user_id"/>
+        </createIndex>
+
+        <createIndex indexName="idx_submission_submitted_referral_code" tableName="user_referral_submission">
+            <column name="submitted_referral_code"/>
+        </createIndex>
+
+        <createIndex indexName="idx_submission_submission_date_time" tableName="user_referral_submission">
+            <column name="submission_date_time"/>
+        </createIndex>
+
+        <createIndex indexName="idx_submission_submission_status" tableName="user_referral_submission">
+            <column name="submission_status"/>
+        </createIndex>
+
+        <!-- Add foreign key constraint from user_referral_submission.referral_id -> user_referral.id -->
+        <addForeignKeyConstraint constraintName="fk_user_referral_submission_referral_id"
+                                 baseTableName="user_referral_submission"
+                                 baseColumnNames="referral_id"
+                                 referencedTableName="user_referral"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"/>
+
+        <rollback>
+            <!-- Drop FK first -->
+            <dropForeignKeyConstraint baseTableName="user_referral_submission"
+                                      constraintName="fk_user_referral_submission_referral_id"/>
+
+            <!-- Drop submission indexes -->
+            <dropIndex indexName="idx_submission_submission_status" tableName="user_referral_submission"/>
+            <dropIndex indexName="idx_submission_submission_date_time" tableName="user_referral_submission"/>
+            <dropIndex indexName="idx_submission_submitted_referral_code" tableName="user_referral_submission"/>
+            <dropIndex indexName="idx_submission_submitted_user_id" tableName="user_referral_submission"/>
+
+            <!-- Drop submission table -->
+            <dropTable tableName="user_referral_submission"/>
+
+            <!-- Drop referral indexes -->
+            <dropIndex indexName="idx_referral_status" tableName="user_referral"/>
+            <dropIndex indexName="idx_referral_created_date_time" tableName="user_referral"/>
+            <dropIndex indexName="idx_referral_user_id" tableName="user_referral"/>
+            <dropIndex indexName="idx_referral_referral_code" tableName="user_referral"/>
+
+            <!-- Drop referral table -->
+            <dropTable tableName="user_referral"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,25 @@
+{
+  "totalResults": 2,
+  "referrals": [
+    {
+      "id": "r1",
+      "userId": "u12345",
+      "referralCode": "REF20250913A",
+      "referralQRString": "https://example.com/referral/REF20250913A",
+      "createdDateTime": "2025-09-13T10:15:30Z",
+      "expiryDateTime": "2025-12-13T23:59:59Z",
+      "referralStatus": "ACTIVE",
+      "totalSubmissions": 5
+    },
+    {
+      "id": "r2",
+      "userId": "u67890",
+      "referralCode": "REF20250913B",
+      "referralQRString": "https://example.com/referral/REF20250913B",
+      "createdDateTime": "2025-08-01T14:45:00Z",
+      "expiryDateTime": "2025-11-01T23:59:59Z",
+      "referralStatus": "EXPIRED",
+      "totalSubmissions": 2
+    }
+  ]
+}

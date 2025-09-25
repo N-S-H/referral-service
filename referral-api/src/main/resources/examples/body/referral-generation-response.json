@@ -1,0 +1,8 @@
+{
+  "userId": "12345",
+  "referralCode": "REF20250913",
+  "referralQRString": "https://example.com/referral/REF20250913",
+  "createdDateTime": "2025-09-13T10:15:30Z",
+  "expiryDateTime": "2025-12-13T23:59:59Z",
+  "referralStatus": "ACTIVE"
+}

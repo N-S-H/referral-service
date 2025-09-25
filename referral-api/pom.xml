@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.backbase.buildingblocks</groupId>
+        <artifactId>backbase-openapi-spec-starter-parent</artifactId>
+        <version>17.1.2</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.backbase.referral</groupId>
+    <artifactId>referral-api</artifactId>
+    <version>1.0.0-SNAPSHOT-0</version>
+
+    <name>Backbase :: REFERRAL API</name>
+
+    <properties>
+        <!-- plugin versions -->
+        <boat-maven-plugin.version>0.17.26</boat-maven-plugin.version>
+        <ignored-lint-rules>
+            240,150,219,215,218,166,136,174,235,107,171,224,143,151,129,146,147,172,145,115,132,120,134,183,154,105,104,130,118,110,153,101,176,116,M009,H002,M010,H001,M008,S005,S006,S007,M011,M0012,B010,B013
+        </ignored-lint-rules>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.backbase.oss</groupId>
+                <artifactId>boat-maven-plugin</artifactId>
+                <version>${boat-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>boat-validation-referral-client</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>validate</goal>
+                        </goals>
+                        <configuration>
+                            <input>src/main/resources/referral-client-api-v1.yaml</input>
+                            <failOnWarning>true</failOnWarning>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>boat-validation-referral-service</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>validate</goal>
+                        </goals>
+                        <configuration>
+                            <input>src/main/resources/referral-service-api-v1.yaml</input>
+                            <failOnWarning>true</failOnWarning>
+                        </configuration>
+                    </execution>
+                    <!-- main version of the specs - dynamically versioned filename -->
+                    <execution>
+                        <id>boat-bundle-referral</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                        <configuration>
+                            <input>${project.basedir}/src/main/resources</input>
+                            <output>${project.build.directory}</output>
+                            <versionFileName>true</versionFileName>
+                        </configuration>
+                    </execution>
+                    <!-- unversioned - static filename for docs -->
+                    <execution>
+                        <id>boat-bundle-unversioned</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                        <configuration>
+                            <input>${project.basedir}/src/main/resources</input>
+                            <output>${project.build.directory}/unversioned</output>
+                            <versionFileName>false</versionFileName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>boat-linting</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>lint</goal>
+                        </goals>
+                        <configuration>
+                            <ignoreRules>${ignored-lint-rules}</ignoreRules>
+                            <inputSpec>${project.build.directory}</inputSpec>
+                            <output>${project.basedir}/target/boat-lint-reports</output>
+                            <writeLintReport>true</writeLintReport>
+                            <failOnWarning>true</failOnWarning>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>boat-docs-referral-client</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.build.directory}/unversioned/referral-client-api-v1.yaml</inputSpec>
+                            <output>${project.build.directory}/generated-docs</output>
+                            <generatorName>html2</generatorName>
+                            <generateAliasAsModel>true</generateAliasAsModel>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>boat-docs-referral-service</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.build.directory}/unversioned/referral-service-api-v1.yaml</inputSpec>
+                            <output>${project.build.directory}/generated-docs</output>
+                            <generatorName>html2</generatorName>
+                            <generateAliasAsModel>true</generateAliasAsModel>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>assemble-api-zip</id>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly/api.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.4</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: string
+  userId:
+    type: string
+  referralCode:
+    type: string
+  referralQrString:
+    type: string
+  createdDateTime:
+    type: string
+  expiryDateTime:
+    type: string
+  referralStatus:
+    type: string
+  totalSubmissions:
+    type: integer

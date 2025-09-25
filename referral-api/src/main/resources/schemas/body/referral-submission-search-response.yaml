@@ -1,0 +1,8 @@
+type: object
+properties:
+  totalResults:
+    type: integer
+  submissions:
+    type: array
+    items:
+      $ref: referral-submission-search-response-entry.yaml

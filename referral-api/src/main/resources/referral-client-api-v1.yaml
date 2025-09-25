@@ -1,0 +1,237 @@
+openapi: 3.0.3
+info:
+  title: Referral API Spec
+  description: Specs for Referral Client API
+  version: 1.0.0
+  x-icon: user-referral
+
+servers:
+  - description: local test
+    url: http://localhost:8080/api/v1
+
+tags:
+  - name: Retail
+
+paths:
+  /client-api/v1/referral/generation:
+    description: This API fetches the referral code for the user or generate if not exists
+    get:
+      summary: Referral Code Generation
+      description: Referral Code Generation
+      operationId: generateReferralCode
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                $ref: examples/body/referral-generation-response.json
+              schema:
+                $ref: '#/components/schemas/ReferralGenerationResponseBody'
+          description: user referral details generated
+        '400':
+          $ref: 'lib/common-types.yaml#/components/responses/400BadRequest'
+        '500':
+          $ref: 'lib/common-types.yaml#/components/responses/500InternalServerError'
+      tags:
+        - referral
+  /client-api/v1/referral/search:
+    description: This API searches for referral code based on user id or referral code
+    get:
+      summary: Referral Code Search
+      description: Referral Code Search
+      operationId: searchReferralCode
+      parameters:
+          - in: query
+            name: userId
+            required: false
+            description: The user id of the referral code owner
+            schema:
+                  type: string
+          - in: query
+            name: referralCode
+            required: false
+            description: The referral code to search for
+            schema:
+                type: string
+          - in: query
+            name: activeReferralCodeOnly
+            required: false
+            schema:
+                type: boolean
+                default: false
+          - description: start date for the results
+            in: query
+            name: startDate
+            required: false
+            schema:
+              type: string
+              pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+              example: "2025-04-24"
+          - description: end date for the results
+            in: query
+            name: endDate
+            required: false
+            schema:
+              type: string
+              pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+              example: "2025-04-24"
+          - in: query
+            name: from
+            required: false
+            schema:
+               type: integer
+               default: 0
+          - in: query
+            name: size
+            required: false
+            schema:
+              type: integer
+              default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                $ref: examples/body/referral-search-response.json
+              schema:
+                $ref: '#/components/schemas/ReferralSearchResponseBody'
+          description: user referral search details
+        '400':
+          $ref: 'lib/common-types.yaml#/components/responses/400BadRequest'
+        '500':
+          $ref: 'lib/common-types.yaml#/components/responses/500InternalServerError'
+      tags:
+        - referral
+  /client-api/v1/referral/submission:
+    description: This API submits the referral code of one user by other user
+    post:
+      summary: Submit Referral Code
+      description: Submit Referral Code
+      operationId: referralCodeSubmission
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/body/referral-code-submission-request.json
+            schema:
+              $ref: '#/components/schemas/ReferralCodeSubmissionRequestBody'
+
+      responses:
+        '201':
+          description: The referral code is submitted successfully
+        '400':
+          $ref: 'lib/common-types.yaml#/components/responses/400BadRequest'
+        '500':
+          $ref: 'lib/common-types.yaml#/components/responses/500InternalServerError'
+      tags:
+        - referral
+  /client-api/v1/referral/submission/search:
+    description: This API searches the referral code submissions based on user id or referral code
+    get:
+      summary: Search Referral Code Submissions
+      description: Search Referral Code Submissions
+      operationId: searchReferralCodeSubmissions
+      parameters:
+        - in: query
+          name: userId
+          required: false
+          description: The user id of person who submitted the referral code
+          schema:
+            type: string
+        - in: query
+          name: referralCode
+          required: false
+          description: The referral code to search for
+          schema:
+            type: string
+        - in: query
+          name: referralUserId
+          required: false
+          description: The user id of the referral code owner
+          schema:
+            type: string
+        - in: query
+          name: activeSubmissionsOnly
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: activeReferralCodeOnly
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - description: start date for the results
+          in: query
+          name: startDate
+          required: false
+          schema:
+            type: string
+            pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            example: "2025-04-24"
+        - description: end date for the results
+          in: query
+          name: endDate
+          required: false
+          schema:
+            type: string
+            pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            example: "2025-04-24"
+        - in: query
+          name: from
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: size
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                $ref: examples/body/referral-submission-search-response.json
+              schema:
+                $ref: '#/components/schemas/ReferralSubmissionSearchResponseBody'
+          description: user referral submission details fetched
+        '400':
+          $ref: 'lib/common-types.yaml#/components/responses/400BadRequest'
+        '500':
+          $ref: 'lib/common-types.yaml#/components/responses/500InternalServerError'
+      tags:
+        - referral
+
+components:
+  schemas:
+    ErrorItem:
+      $ref: 'lib/schemas/error-item.yaml'
+    ReferralGenerationResponseBody:
+      $ref: schemas/body/referral-generation-response.yaml
+    ReferralSearchResponseBody:
+      $ref: schemas/body/referral-search-response.yaml
+    ReferralCodeSubmissionRequestBody:
+      $ref: schemas/body/referral-submission-request.yaml
+    ReferralSubmissionSearchResponseBody:
+      $ref: schemas/body/referral-submission-search-response.yaml
+    NotAcceptableError:
+      properties:
+        message:
+          type: string
+        supportedMediaTypes:
+          description: List of supported media types for this endpoint
+          items:
+            type: string
+          type: array
+      type: object
+    UnauthorizedError:
+      properties:
+        message:
+          type: string
+      required:
+        - message
+      type: object

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns="http://maven.apache.org/POM/4.0.0"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.backbase.referral</groupId>
+	<artifactId>referral-parent-service</artifactId>
+	<version>1.0.0-SNAPSHOT-0</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>referral-api</module>
+		<module>referral-service</module>
+	</modules>
+
+	<properties>
+		<backbase-bom.version>2024.09.43-LTS</backbase-bom.version>
+
+		<sonar.projectKey>${SONAR_PROJECT_KEY}</sonar.projectKey>
+		<sonar.organization>${SONAR_ORGANIZATION}</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.scanner.force-deprecated-java-version>true</sonar.scanner.force-deprecated-java-version>
+		<sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.language>java</sonar.language>
+		<sonar.coverage.jacoco.xmlReportPaths>
+			${project.basedir}/target/site/jacoco-ut/jacoco.xml,${project.basedir}/target/site/jacoco-it/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
+		<jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
+
+	</properties>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.4</version>
+			</plugin>
+		</plugins>
+	</build>
+</project>

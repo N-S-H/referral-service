@@ -1,0 +1,8 @@
+type: object
+properties:
+  referralCode:
+    type: string
+  source:
+    type: string
+required:
+  - referralCode

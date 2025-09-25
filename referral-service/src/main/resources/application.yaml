@@ -1,0 +1,95 @@
+server:
+  port: 8081
+
+spring:
+  zipkin:
+    enabled: false
+  sleuth:
+    messaging:
+      jms:
+        enabled: false
+  cloud:
+    kubernetes:
+      discovery:
+        enabled: true
+  codec:
+    max-in-memory-size: 10MB
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  datasource:
+    url: jdbc:mysql://localhost:3306/referral-service?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: secret
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  main:
+    allow-bean-definition-overriding: true
+
+# API Registry client configuration
+eureka:
+  instance:
+    metadata-map:
+      public: true
+      role: live
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://localhost:8080/registry/eureka/
+
+# Configure Internal JWT handler
+sso:
+  jwt:
+    internal:
+      signature:
+        key:
+          type: ENV
+          value: SIG_SECRET_KEY
+
+# Spring health monitoring
+management:
+  health:
+    jms:
+      enabled: false
+
+
+backbase:
+  security:
+    csrf:
+      enabled: false
+  public:
+    paths: /service-api/**
+  mtls:
+    enabled: false
+  referral:
+    userActiveSubmissionLimit: 1 # Number of active submissions allowed per user
+    referralExpiryEnabled: false
+    referralExpiryInHours: 0
+    referralStatusRefreshCronExpression: "0 */5 * * * *" # Every 5 minutes only if referralExpiryEnabled is true
+    reGenerationUponExpiryEnabled: false
+    submissionExpiryEnabled: false  # If true, submissions will expire after submissionExpiryInHours
+    submissionExpiryInHours: 0
+    submissionStatusRefreshCronExpression: "0 */5 * * * *" # Every 5 minutes only if submissionExpiryEnabled is true
+    submissionExpiryUponReferralExpiryEnabled: false # If true, submissions will expire when the associated referral expires
+    unknownReferralCodeSubmissionEnabled: true
+    selfReferralAllowed: false
+    referralCodeLengthWithoutPrefix: 7
+    referralCodePrefix: ""
+    referralCodePatternType: ALPHANUMERIC # ALPHANUMERIC, ALPHABETIC, NUMERIC, REGEX
+    referralCodeRegexPattern: "" # Used only if referralCodePatternType is REGEX
+    referralCodeQREnabled: true
+    referralCodeGenerationMaxAttempts: 100
+
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.backbase: INFO
